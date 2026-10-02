@@ -1,3 +1,4 @@
+%%writefile app.py
 import streamlit as st
 from google import genai
 from google.genai import types
@@ -8,21 +9,27 @@ import json
 # Configuración de la interfaz web corporativa
 st.set_page_config(page_title="Plataforma IA Seguros", page_icon="🛡️", layout="wide")
 
-# Barra lateral común para Navegación y API Key
+# Barra lateral común únicamente para Navegación
 with st.sidebar:
     st.header("🛡️ Panel de Control IA")
-    # Selector de aplicaciones
     app_mode = st.selectbox("Selecciona la herramienta:", ["Copiloto de Pólizas (RAG)", "Analista de Siniestros (JSON)"])
     st.markdown("---")
-    api_key = st.text_input("Introduce tu Google AI Studio API Key:", type="password")
-    st.info("MVP de soluciones satélites para el sector asegurador, diseñadas para complementar flujos de SAP Cloud.")
+    st.info("MVP de soluciones satélites para el sector asegurador. Credenciales corporativas embebidas de forma segura.")
 
-# Validador global de API Key
-if not api_key:
-    st.warning("⚠️ Por favor, introduce tu API Key en la barra lateral izquierda para activar los módulos de Inteligencia Artificial.")
-else:
-    # Inicializamos el cliente oficial de Google GenAI
-    client = genai.Client(api_key=api_key)
+# ====================================================================
+# EXTRACCIÓN SEGURA DE LA API KEY DESDE LOS SECRETOS DE STREAMLIT
+# ====================================================================
+try:
+    # Captura la clave directo de la plataforma en la nube sin mostrarla en pantalla
+    API_KEY = st.secrets["GEMINI_API_KEY"]
+    client = genai.Client(api_key=API_KEY)
+    api_disponible = True
+except Exception:
+    st.error("⚠️ Error de configuración: La clave de la API no está configurada en los Secretos de la plataforma.")
+    api_disponible = False
+
+# Ejecutar la aplicación solo si la clave se cargó correctamente de fondo
+if api_disponible:
 
     # ====================================================================
     # MÓDULO 1: COPILOTO DE PÓLIZAS (RAG)
@@ -139,3 +146,5 @@ else:
 
                 except Exception as e:
                     st.error(f"Error en el procesamiento: {e}")
+
+
