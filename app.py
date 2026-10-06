@@ -63,7 +63,7 @@ if api_disponible:
                         )
                         
                         response = client.models.generate_content(
-                            model='gemini-1.5-flash',
+                            model='gemini-2.5-flash',
                             contents=[archivo_google, f"{prompt_instrucciones}\n\nPregunta del usuario: {pregunta}"]
                         )
                         
@@ -116,7 +116,7 @@ if api_disponible:
                     )
 
                     response = client.models.generate_content(
-                        model='gemini-1.5-flash',
+                        model='gemini-2.5-flash',
                         contents=f"{prompt_sistema} \n\n Denuncia del cliente: \n {relato_siniestro}",
                         config=types.GenerateContentConfig(
                             response_mime_type="application/json",
